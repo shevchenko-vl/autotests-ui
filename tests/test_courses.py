@@ -1,3 +1,4 @@
+import pytest
 from playwright.sync_api import sync_playwright, expect
 
 
@@ -14,6 +15,8 @@ COURSES_TOOLBAR_TITLE_LOC = f'//*[@{TEST_ID}="courses-list-toolbar-title-text"]'
 COURSES_EMPTY_VIEW_TITLE_LOC = f'//*[@{TEST_ID}="courses-list-empty-view-title-text"]'
 
 
+@pytest.mark.courses
+@pytest.mark.regression
 def test_empty_courses_list():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
