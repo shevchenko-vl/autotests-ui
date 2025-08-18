@@ -2,5 +2,6 @@
 .idea
 __pycache__
 allure-results
+tracing
 allure-report
 browser-state.json
