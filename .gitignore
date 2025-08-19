@@ -3,5 +3,6 @@
 __pycache__
 allure-results
 tracing
+videos
 allure-report
 browser-state.json
