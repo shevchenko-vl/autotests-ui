@@ -1,7 +1,7 @@
 from enum import StrEnum
-from typing import Self, Annotated
+from typing import Self
 
-from pydantic import EmailStr, FilePath, HttpUrl, DirectoryPath, BaseModel, BeforeValidator
+from pydantic import EmailStr, FilePath, HttpUrl, DirectoryPath, BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,22 +21,6 @@ class TestData(BaseModel):
     image_png_file: FilePath
 
 
-def ensure_file_exists(file: FilePath | str) -> FilePath:
-    if isinstance(file, str):
-        file = FilePath(file)
-
-    file.touch(exist_ok=True)
-    return file
-
-
-def ensure_dir_exists(directory: DirectoryPath | str) -> DirectoryPath:
-    if isinstance(directory, str):
-        directory = DirectoryPath(directory)
-
-    directory.mkdir(exist_ok=True)
-    return directory
-
-
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file='.env',
@@ -49,9 +33,25 @@ class Settings(BaseSettings):
     browsers: list[Browser]
     test_user: TestUser
     test_data: TestData
-    videos_dir: Annotated[DirectoryPath, BeforeValidator(ensure_dir_exists)] = DirectoryPath('videos')
-    tracing_dir: Annotated[DirectoryPath, BeforeValidator(ensure_dir_exists)] = DirectoryPath('tracing')
-    browser_state_file: Annotated[FilePath, BeforeValidator(ensure_file_exists)] = FilePath('browser-state.json')
+    videos_dir: DirectoryPath
+    tracing_dir: DirectoryPath
+    browser_state_file: FilePath
+
+    @classmethod
+    def initialize(cls) -> Self:
+        videos_dir = DirectoryPath('./videos')
+        tracing_dir = DirectoryPath('./tracing')
+        browser_state_file = FilePath('browser-state.json')
+
+        videos_dir.mkdir(exist_ok=True)
+        tracing_dir.mkdir(exist_ok=True)
+        browser_state_file.touch(exist_ok=True)
+
+        return Settings(
+            videos_dir=videos_dir,
+            tracing_dir=tracing_dir,
+            browser_state_file=browser_state_file
+        )
 
 
-settings = Settings()
+settings = Settings.initialize()
