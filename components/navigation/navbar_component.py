@@ -2,6 +2,7 @@ import allure
 from playwright.sync_api import Page
 
 from components.base_component import BaseComponent
+from config import settings
 from elements.text import Text
 
 
@@ -18,4 +19,4 @@ class NavbarComponent(BaseComponent):
         self.app_title.check_have_text('UI Course')
 
         self.welcome_title.check_visible()
-        self.welcome_title.check_have_text(f'Welcome, {username}!')
+        self.welcome_title.check_have_text(f'Welcome, {settings.test_user.username}!')

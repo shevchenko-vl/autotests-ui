@@ -10,7 +10,11 @@ def initialize_playwright_page(
         storage_state: str | None = None
 ) -> Page:
     with playwright.chromium.launch(headless=settings.headless) as browser:
-        context = browser.new_context(storage_state=storage_state, record_video_dir=settings.videos_dir)
+        context = browser.new_context(
+            base_url=settings.get_base_url(),
+            storage_state=storage_state,
+            record_video_dir=settings.videos_dir
+        )
         context.tracing.start(screenshots=True, snapshots=True, sources=True)
         page = context.new_page()
 

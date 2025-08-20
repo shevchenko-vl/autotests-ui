@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     tracing_dir: DirectoryPath
     browser_state_file: FilePath
 
+    def get_base_url(self) -> str:
+        return f'{self.app_url}/'
+
     @classmethod
     def initialize(cls) -> Self:
         videos_dir = DirectoryPath('./videos')
